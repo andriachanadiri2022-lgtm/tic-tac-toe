@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A colorful, two-player tic-tac-toe game. Take turns, score a win, and play again."
+    />
+    <title>Tic-Tac-Toe — Your Move</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Your Move home">
+          <span class="brand-icon" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </span>
+          <span>YOUR<span class="brand-accent">MOVE</span></span>
+        </a>
+        <span class="game-tag"><span class="live-dot"></span> TWO PLAYER GAME</span>
+      </header>
+
+      <section class="game-content" aria-labelledby="game-title">
+        <div class="intro">
+          <p class="eyebrow">THE CLASSIC, WITH A TWIST</p>
+          <h1 id="game-title">Tic-tac-toe<span class="title-period">.</span></h1>
+          <p class="subtitle">A little friendly competition never hurt.</p>
+        </div>
+
+        <div class="scoreboard" aria-label="Score">
+          <div class="player-card player-x active" id="player-x-card">
+            <span class="player-mark" aria-hidden="true">×</span>
+            <span class="player-info">
+              <span class="player-name">PLAYER 1</span>
+              <span class="player-label">CROSS</span>
+            </span>
+            <span class="player-score" id="score-x" aria-label="Player 1 score">0</span>
+          </div>
+          <span class="score-divider" aria-hidden="true">:</span>
+          <div class="player-card player-o" id="player-o-card">
+            <span class="player-mark" aria-hidden="true">○</span>
+            <span class="player-info">
+              <span class="player-name">PLAYER 2</span>
+              <span class="player-label">CIRCLE</span>
+            </span>
+            <span class="player-score" id="score-o" aria-label="Player 2 score">0</span>
+          </div>
+        </div>
+
+        <div class="game-panel">
+          <div class="game-status" role="status" aria-live="polite" aria-atomic="true">
+            <span class="turn-indicator" id="turn-indicator" aria-hidden="true">×</span>
+            <span id="status-text">Player 1's turn</span>
+          </div>
+
+          <div class="board" role="group" aria-label="Tic-tac-toe board">
+            <button class="cell" type="button" data-cell="0" aria-label="Top left, empty"></button>
+            <button class="cell" type="button" data-cell="1" aria-label="Top middle, empty"></button>
+            <button class="cell" type="button" data-cell="2" aria-label="Top right, empty"></button>
+            <button class="cell" type="button" data-cell="3" aria-label="Middle left, empty"></button>
+            <button class="cell" type="button" data-cell="4" aria-label="Center, empty"></button>
+            <button class="cell" type="button" data-cell="5" aria-label="Middle right, empty"></button>
+            <button class="cell" type="button" data-cell="6" aria-label="Bottom left, empty"></button>
+            <button class="cell" type="button" data-cell="7" aria-label="Bottom middle, empty"></button>
+            <button class="cell" type="button" data-cell="8" aria-label="Bottom right, empty"></button>
+          </div>
+
+          <div class="game-actions">
+            <button class="button button-primary" id="new-game" type="button">
+              <span aria-hidden="true">↻</span> New round
+            </button>
+            <button class="button button-secondary" id="reset-score" type="button">
+              Reset score
+            </button>
+          </div>
+        </div>
+
+        <p class="game-hint"><span aria-hidden="true">✦</span> THREE IN A ROW TAKES THE ROUND</p>
+      </section>
+
+      <footer class="footer">
+        <span>Made for your next rematch.</span>
+        <span class="footer-symbols" aria-hidden="true"><span>×</span> <span>○</span></span>
+      </footer>
+    </main>
+  </body>
+</html>

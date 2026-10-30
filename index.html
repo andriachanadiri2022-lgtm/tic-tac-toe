@@ -1,95 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="A colorful, two-player tic-tac-toe game. Take turns, score a win, and play again."
+      content="Catch falling stars and dodge bombs in a hand-tracking arcade game."
     />
-    <title>Tic-Tac-Toe — Your Move</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <meta name="theme-color" content="#10172b" />
+    <title>Gesture Garden — Catch the stars</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.22.0/dist/tf-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@4.22.0/dist/tf-converter.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@4.22.0/dist/tf-backend-webgl.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/hand-pose-detection@2.0.1/dist/hand-pose-detection.min.js"></script>
     <script src="script.js" defer></script>
   </head>
   <body>
     <main class="game-shell">
       <header class="topbar">
-        <a class="brand" href="#" aria-label="Your Move home">
-          <span class="brand-icon" aria-hidden="true">
-            <span></span><span></span><span></span><span></span>
-          </span>
-          <span>YOUR<span class="brand-accent">MOVE</span></span>
+        <a class="brand" href="#" aria-label="Gesture Garden home">
+          <span class="brand-mark" aria-hidden="true">✦</span>
+          <span>GESTURE<span class="brand-accent">GARDEN</span></span>
         </a>
-        <span class="game-tag"><span class="live-dot"></span> TWO PLAYER GAME</span>
+        <span class="game-tag"><span class="live-dot"></span> HAND-POWERED ARCADE</span>
       </header>
 
       <section class="game-content" aria-labelledby="game-title">
-        <div class="intro">
-          <p class="eyebrow">THE CLASSIC, WITH A TWIST</p>
-          <h1 id="game-title">Tic-tac-toe<span class="title-period">.</span></h1>
-          <p class="subtitle">A little friendly competition never hurt.</p>
-        </div>
-
-        <div class="scoreboard" aria-label="Score">
-          <div class="player-card player-x active" id="player-x-card">
-            <span class="player-mark" aria-hidden="true">×</span>
-            <span class="player-info">
-              <span class="player-name">PLAYER 1</span>
-              <span class="player-label">CROSS</span>
-            </span>
-            <span class="player-score" id="score-x" aria-label="Player 1 score">0</span>
+        <div class="game-heading">
+          <div>
+            <p class="eyebrow">A LITTLE MAGIC IN YOUR PALM</p>
+            <h1 id="game-title">Catch the stars<span class="title-period">.</span></h1>
+            <p class="subtitle">Move your hand to collect stars. Dodge the bombs.</p>
           </div>
-          <span class="score-divider" aria-hidden="true">:</span>
-          <div class="player-card player-o" id="player-o-card">
-            <span class="player-mark" aria-hidden="true">○</span>
-            <span class="player-info">
-              <span class="player-name">PLAYER 2</span>
-              <span class="player-label">CIRCLE</span>
-            </span>
-            <span class="player-score" id="score-o" aria-label="Player 2 score">0</span>
+          <div class="scoreboard" aria-label="Game stats">
+            <div class="stat-card">
+              <span class="stat-label">SCORE</span>
+              <strong id="score-value">0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">BEST</span>
+              <strong id="best-value">0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">LIVES</span>
+              <strong id="lives-value" aria-label="3 lives">♥ ♥ ♥</strong>
+            </div>
           </div>
         </div>
 
         <div class="game-panel">
-          <div class="game-status" role="status" aria-live="polite" aria-atomic="true">
-            <span class="turn-indicator" id="turn-indicator" aria-hidden="true">×</span>
-            <span id="status-text">Player 1's turn</span>
+          <div class="game-toolbar">
+            <p id="game-status" role="status" aria-live="polite">Ready when you are</p>
+            <div class="toolbar-actions">
+              <button class="icon-button" id="pause-button" type="button" disabled>
+                Pause
+              </button>
+              <button class="icon-button" id="sound-button" type="button" aria-pressed="true">
+                Sound on
+              </button>
+            </div>
           </div>
 
-          <div class="board" role="group" aria-label="Tic-tac-toe board">
-            <button class="cell" type="button" data-cell="0" aria-label="Top left, empty"></button>
-            <button class="cell" type="button" data-cell="1" aria-label="Top middle, empty"></button>
-            <button class="cell" type="button" data-cell="2" aria-label="Top right, empty"></button>
-            <button class="cell" type="button" data-cell="3" aria-label="Middle left, empty"></button>
-            <button class="cell" type="button" data-cell="4" aria-label="Center, empty"></button>
-            <button class="cell" type="button" data-cell="5" aria-label="Middle right, empty"></button>
-            <button class="cell" type="button" data-cell="6" aria-label="Bottom left, empty"></button>
-            <button class="cell" type="button" data-cell="7" aria-label="Bottom middle, empty"></button>
-            <button class="cell" type="button" data-cell="8" aria-label="Bottom right, empty"></button>
-          </div>
+          <div class="play-area">
+            <canvas
+              id="game-canvas"
+              width="960"
+              height="560"
+              aria-label="Game field. Move your hand or use the arrow keys to catch stars and avoid bombs."
+            ></canvas>
 
-          <div class="game-actions">
-            <button class="button button-primary" id="new-game" type="button">
-              <span aria-hidden="true">↻</span> New round
-            </button>
-            <button class="button button-secondary" id="reset-score" type="button">
-              Reset score
-            </button>
+            <aside class="camera-panel" aria-label="Hand tracking camera">
+              <div class="camera-heading">
+                <span>HAND TRACKING</span>
+                <span class="tracking-badge" id="tracking-status">OFF</span>
+              </div>
+              <div class="video-frame">
+                <video id="webcam" autoplay muted playsinline></video>
+                <div class="video-placeholder" id="webcam-placeholder">
+                  <span class="camera-symbol" aria-hidden="true">◎</span>
+                  Camera is off
+                </div>
+              </div>
+              <button class="camera-button" id="camera-button" type="button">
+                Enable hand tracking
+              </button>
+              <p class="camera-status" id="camera-status">
+                Camera is optional. Your video stays on this device.
+              </p>
+            </aside>
+
+            <section class="screen" id="start-screen" aria-labelledby="start-title">
+              <div class="screen-card">
+                <p class="eyebrow">YOUR HAND IS THE CONTROLLER</p>
+                <h2 id="start-title">Ready to catch?</h2>
+                <p class="screen-copy">
+                  Move your index finger to guide the catcher. Pinch your thumb and index finger
+                  to pull nearby stars toward you.
+                </p>
+                <div class="how-to-play">
+                  <div><span class="instruction-icon star-icon">✦</span><span>Catch stars for points</span></div>
+                  <div><span class="instruction-icon bomb-icon">✹</span><span>Dodge bombs or lose a life</span></div>
+                  <div><span class="instruction-icon pinch-icon">⌁</span><span>Pinch to activate star magnet</span></div>
+                </div>
+                <div class="button-row">
+                  <button class="button button-primary" id="start-button" type="button">
+                    Start game
+                  </button>
+                  <button class="button button-secondary" id="keyboard-button" type="button">
+                    Play with keyboard
+                  </button>
+                </div>
+                <p class="keyboard-hint">Keyboard: arrow keys or WASD to move · Space for magnet</p>
+              </div>
+            </section>
+
+            <section class="screen" id="pause-screen" aria-labelledby="pause-title" hidden>
+              <div class="screen-card compact-card">
+                <p class="eyebrow">TAKE A BREATHER</p>
+                <h2 id="pause-title">Game paused</h2>
+                <button class="button button-primary" id="resume-button" type="button">
+                  Keep playing
+                </button>
+              </div>
+            </section>
+
+            <section class="screen" id="game-over-screen" aria-labelledby="game-over-title" hidden>
+              <div class="screen-card compact-card">
+                <p class="eyebrow">NICE CATCHING</p>
+                <h2 id="game-over-title">Garden's taking a nap</h2>
+                <p class="final-score">You caught <strong id="final-score">0</strong> points</p>
+                <p class="best-message" id="best-message"></p>
+                <button class="button button-primary" id="restart-button" type="button">
+                  Play again
+                </button>
+              </div>
+            </section>
           </div>
         </div>
 
-        <p class="game-hint"><span aria-hidden="true">✦</span> THREE IN A ROW TAKES THE ROUND</p>
+        <p class="game-hint">
+          <span aria-hidden="true">✦</span> Keep your hand in view and see how long your streak can grow
+        </p>
       </section>
 
       <footer class="footer">
-        <span>Made for your next rematch.</span>
-        <span class="footer-symbols" aria-hidden="true"><span>×</span> <span>○</span></span>
+        <span>Made for hands-on fun.</span>
+        <span>Camera access is only used for live, on-device hand tracking.</span>
       </footer>
     </main>
   </body>
